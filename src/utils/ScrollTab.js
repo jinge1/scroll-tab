@@ -1,13 +1,13 @@
 /*
  * @Author: lixiong 
  * @Date: 2019-07-30 23:55:29 
- * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2019-07-31 00:16:23
+ * @Last Modified by: lixiong
+ * @Last Modified time: 2019-08-01 07:29:21
  */
 
 
 /**
- * 
+ * ScrollTabs 滚动tab效果
  */
 export default class ScrollTabs {
   constructor(options = {}) {
@@ -19,6 +19,9 @@ export default class ScrollTabs {
     this.init()
   }
 
+  /**
+   *  初始化
+   */
   init() {
     const { contentEle, tabEle, conf } = this
     const { initIndex = 0 } = conf
@@ -44,17 +47,26 @@ export default class ScrollTabs {
     this.changeTab(initIndex, true)
   }
 
+  /**
+   * setScrollEvent 设置滚动事件
+   */
   setScrollEvent() {
     const { scrollEventEle } = this
     this.handleScroll = this.scrollEvent.bind(this)
     scrollEventEle.addEventListener('scroll', this.handleScroll)
   }
 
+  /**
+   * removeEvent 移除滚动事件
+   */
   removeEvent() {
     const { scrollEventEle } = this
     scrollEventEle.removeEventListener('scroll', this.handleScroll)
   }
 
+  /**
+   * scrollEvent 滚动事件处理
+   */
   scrollEvent() {
     const { contentEle, conf, contentScrollEle, limit } = this
     const list = contentEle.children
@@ -125,12 +137,22 @@ export default class ScrollTabs {
     tabIndex = this.getClientIndex(scrollTop, tabIndex)
     this.setTab(tabIndex, false)
   }
-
+  /**
+   * equally 计算平均滚动高度
+   * @param {*} totalScroll 
+   * @param {*} scrollTop 
+   * @param {*} len 
+   */
   equally(totalScroll, scrollTop, len) {
     const each = totalScroll / len
     return parseInt(scrollTop / each)
   }
 
+  /**
+   * getClientIndex 获取当前可视区元素
+   * @param {Number} scrollTop scrollTop值
+   * @param {Number} index index值
+   */
   getClientIndex(scrollTop, index) {
     const { contentEle } = this
     const list = contentEle.children
@@ -157,10 +179,19 @@ export default class ScrollTabs {
     return index
   }
 
+  /**
+   * loading值设置
+   * @param {*} index 
+   */
   setLoadingIndex(index) {
     // console.log(index)
   }
 
+  /**
+   * changeTab 改变tab值
+   * @param {Number} index tab索引值
+   * @param {Boolean} isInit 是否为初始化阶段
+   */
   changeTab(index, isInit = false) {
     const { contentEle } = this
     const currentEle = contentEle.children[index]
@@ -208,6 +239,7 @@ export default class ScrollTabs {
    * @param isInit {Boolent} 是否为初始化，初始化的时候，不需要调用回调
    */
   setTab(index, isInit = false) {
+    console.log('setTab', index)
     const { tabEle, isScrollTab, conf } = this
     const { tabDirection = 'y', changeTab } = conf
 
@@ -252,7 +284,7 @@ export default class ScrollTabs {
   }
 
   /**
-   *
+   * getEleInfo 获取元素的宽高等信息
    * @param {Object} ele dom元素
    * @param {Boolean} isTab 元素是否为tab元素
    */
@@ -292,7 +324,10 @@ export default class ScrollTabs {
     }
   }
 
-  // 根据元素样式设定，判断是否为滚动元素
+  /**
+   * isEleScroll 根据元素样式设定，判断是否为滚动元素
+   * @param {*} ele 
+   */
   isEleScroll(ele) {
     const position = this.getStyleValue(ele, 'position')
     const height = this.getStyleValue(ele, 'height')
@@ -304,10 +339,19 @@ export default class ScrollTabs {
     return true
   }
 
+  /**
+   * getStyleValue 获取css样式值
+   * @param {Object} ele 元素
+   * @param {String} attr 属性名称
+   */
   getStyleValue(ele, attr) {
     return window.getComputedStyle(ele, null).getPropertyValue(attr)
   }
 
+  /**
+   * getEle 获取元素
+   * @param {String} str 选择器
+   */
   getEle(str) {
     return typeof str === 'string' ? document.querySelector(str) : str
   }

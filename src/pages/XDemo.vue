@@ -42,13 +42,14 @@ export default {
           contentEle: this.$refs.contentEle,
           tabDirection: 'x',
           changeTab: (index)=> {
+            console.log('index: ', index)
             this.tabIndex = index
           }
         })
       })
     },
     changeTab(index){
-      this.scrollTab.changeTab(index)
+      // this.scrollTab.changeTab(index)
     }
   }
 }
