@@ -16,6 +16,7 @@
 </template>
 <script>
 import ScrollTab from '../utils/ScrollTab'
+
 export default {
   data() {
     return {

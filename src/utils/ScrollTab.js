@@ -1,20 +1,30 @@
 /*
- * @Author: lixiong 
- * @Date: 2019-07-30 23:55:29 
+ * @Author: lixiong
+ * @Date: 2019-07-30 23:55:29
  * @Last Modified by: lixiong
- * @Last Modified time: 2019-08-01 07:29:21
+ * @Last Modified time: 2019-08-04 00:21:31
  */
-
 
 /**
  * ScrollTabs 滚动tab效果
  */
 export default class ScrollTabs {
+  /**
+   * 构造函数
+   * @param {Object} options
+   * @example
+   * {
+   *  tabEle: '', // tab元素(string|Object)
+   *  contentEle: '', // content元素(string|Object)
+   *  changeTab: index=> {} // 滚动切花tab时的操作，通常为更新本地tab的index值
+   *  tabDirection: 'y',  // tab元素的滚动方向：x 水平方向，y 垂直方向
+   *  initIndex: 0  // 初始index值
+   * }
+   */
   constructor(options = {}) {
-    const { tabEle, contentEle, limit = 10, ...other } = options
+    const { tabEle, contentEle, ...other } = options
     this.tabEle = this.getEle(tabEle)
     this.contentEle = this.getEle(contentEle)
-    this.limit = limit
     this.conf = other
     this.init()
   }
@@ -68,7 +78,7 @@ export default class ScrollTabs {
    * scrollEvent 滚动事件处理
    */
   scrollEvent() {
-    const { contentEle, conf, contentScrollEle, limit } = this
+    const { contentEle, contentScrollEle } = this
     const list = contentEle.children
     const listArr = Array.from(list)
     const scrollTop = contentScrollEle.scrollTop
@@ -80,6 +90,7 @@ export default class ScrollTabs {
     let firstEnableIndex = -1
     let lastEnableIndex = -1
 
+    // 找出第一个与最后一个可滚动且可滚动距离超过父级高度一半的元素
     listArr.forEach(({ offsetTop }, index) => {
       if (
         offsetTop > clientHeight / 2 &&
@@ -92,6 +103,7 @@ export default class ScrollTabs {
       }
     })
 
+    // 若存在可滚动到父级高度一半的元素，则计算滚动index值
     if (firstEnableIndex > -1) {
       const firstEnableEle = listArr[firstEnableIndex]
       const lastEnableEle = listArr[lastEnableIndex]
@@ -100,9 +112,12 @@ export default class ScrollTabs {
       const startScroll = firstEnableEle.offsetTop - clientHeight / 2
       const lastScroll = lastEnableEle.offsetTop - clientHeight / 2
 
+      // 第一个滚动元素尚未到达父级高度一半的时候，平均分配高度到其上所有元素
       if (scrollTop <= startScroll) {
         tabIndex = this.equally(startScroll, scrollTop, firstEnableIndex)
       }
+
+      // 可滚动元素判断元素高度滚动到父级高度一半作为切换index的条件
       if (scrollTop > startScroll && scrollTop <= lastScroll) {
         tabIndex = listArr.findIndex(({ offsetTop, offsetHeight }) => {
           return (
@@ -112,6 +127,7 @@ export default class ScrollTabs {
         })
       }
 
+      // 最后一个可滚动到父级高度一半的元素以下的元素，平均分配甚于可滚动空间
       if (scrollTop > lastScroll) {
         tabIndex =
           lastEnableIndex +
@@ -133,15 +149,14 @@ export default class ScrollTabs {
     if (tabIndex >= len) {
       tabIndex = len - 1
     }
-    console.log('tabIndex: ', tabIndex)
     tabIndex = this.getClientIndex(scrollTop, tabIndex)
     this.setTab(tabIndex, false)
   }
   /**
    * equally 计算平均滚动高度
-   * @param {*} totalScroll 
-   * @param {*} scrollTop 
-   * @param {*} len 
+   * @param {*} totalScroll
+   * @param {*} scrollTop
+   * @param {*} len
    */
   equally(totalScroll, scrollTop, len) {
     const each = totalScroll / len
@@ -161,11 +176,10 @@ export default class ScrollTabs {
     // 当前在可视区的元素
     const clientArr = listArr.filter(({ offsetHeight, offsetTop }) => {
       return (
-        (offsetTop < clientHeight &&
-          offsetTop + offsetHeight - scrollTop > 0) ||
-        (offsetTop > clientHeight &&
-          offsetTop - scrollTop < clientHeight &&
-          offsetTop + offsetHeight - scrollTop > 0)
+        (offsetTop < clientHeight && scrollTop < offsetTop + offsetHeight) ||
+        (offsetTop >= clientHeight &&
+          scrollTop + clientHeight >= offsetTop &&
+          scrollTop < offsetTop + offsetHeight)
       )
     })
     if (
@@ -177,14 +191,6 @@ export default class ScrollTabs {
       )
     }
     return index
-  }
-
-  /**
-   * loading值设置
-   * @param {*} index 
-   */
-  setLoadingIndex(index) {
-    // console.log(index)
   }
 
   /**
@@ -239,7 +245,6 @@ export default class ScrollTabs {
    * @param isInit {Boolent} 是否为初始化，初始化的时候，不需要调用回调
    */
   setTab(index, isInit = false) {
-    console.log('setTab', index)
     const { tabEle, isScrollTab, conf } = this
     const { tabDirection = 'y', changeTab } = conf
 
@@ -326,7 +331,7 @@ export default class ScrollTabs {
 
   /**
    * isEleScroll 根据元素样式设定，判断是否为滚动元素
-   * @param {*} ele 
+   * @param {*} ele
    */
   isEleScroll(ele) {
     const position = this.getStyleValue(ele, 'position')
