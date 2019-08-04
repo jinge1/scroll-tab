@@ -49,8 +49,11 @@ export default {
       })
     },
     changeTab(index){
-      // this.scrollTab.changeTab(index)
+      this.scrollTab.changeTab(index)
     }
+  },
+  beforeDestroy(){
+    this.scrollTab.removeEvent()
   }
 }
 </script>
@@ -74,7 +77,7 @@ export default {
   }
   & .scroll-content {
     line-height: 100px;
-    padding-left: 100px;
+    flex: 1;
     max-height: 360px;
     box-shadow: 0 0 6px #ccc;
     position: relative;
@@ -83,7 +86,6 @@ export default {
       background: orange;
       &:nth-child(odd){
         background: green;
-        /* height: 150px; */
       }
     }
   }

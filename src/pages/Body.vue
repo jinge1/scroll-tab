@@ -50,6 +50,9 @@ export default {
     changeTab(index) {
       this.scrollTab.changeTab(index)
     }
+  },
+  beforeDestroy(){
+    this.scrollTab.removeEvent()
   }
 }
 </script>
@@ -70,7 +73,7 @@ export default {
   }
   & .scroll-content {
     line-height: 100px;
-    padding-left: 100px;
+    flex: 1;
     box-shadow: 0 0 6px #ccc;
     & .content-item {
       background: orange;

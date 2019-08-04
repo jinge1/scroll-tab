@@ -49,8 +49,11 @@ export default {
       })
     },
     changeTab(index){
-      // this.scrollTab.changeTab(index)
+      this.scrollTab.changeTab(index)
     }
+  },
+  beforeDestroy(){
+    this.scrollTab.removeEvent()
   }
 }
 </script>
@@ -76,7 +79,6 @@ export default {
   }
   & .scroll-content {
     line-height: 100px;
-    padding-left: 100px;
     max-height: 300px;
     position: relative;
     overflow: auto;

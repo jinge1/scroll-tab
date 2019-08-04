@@ -22,8 +22,8 @@ const router = new VueRouter({
       component: () => import('../pages/XDemo')
     },
     {
-      path: '/test',
-      component: () => import('../pages/Test')
+      path: '/height',
+      component: () => import('../pages/Height')
     }
   ]
 })
