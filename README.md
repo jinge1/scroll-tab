@@ -2,7 +2,9 @@
 
 滚动 tab 切换效果，tab 点击与滚动距离计算 tab 切换
 
-## [demo](https://jinge1.github.io/scroll-tabs/#/index)
+## demo
+
+[demo地址](https://jinge1.github.io/scroll-tabs/#/index)
 
 ## step
 
